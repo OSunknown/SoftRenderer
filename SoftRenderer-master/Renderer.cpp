@@ -3,7 +3,7 @@
 #include "SoftRenderer.h"
 #include "GDIHelper.h"
 #include "Renderer.h"
-
+#include "Vector.h"
 bool IsInRange(int x, int y);
 void PutPixel(int x, int y);
 
@@ -24,12 +24,26 @@ void PutPixel(int x, int y)
 void DrawC(int a, int b, int r)
 {
 	// x^2 + y^2 = r^2
-	for (int i = -r ; i < r ; i++)
+	/*for (int i = -r ; i < r ; i++)
 	{
 		for (int j = -r; j < r; j++)
 		{
 			if((i*i) + (j*j) <= (r*r))
 				PutPixel(i+a, j+b);
+		}
+	}*/
+
+	Vector2 Center(0.0f, 0.0f);
+
+	for (int i = -r; i < r; i++)
+	{
+		for (int j = -r; j < r; j++)
+		{
+			Vector2 CurrentPos(i, j);
+			if (Vector2::DistSquared(Center, CurrentPos) < (r*r))
+			{
+				PutPixel(i, j);
+			}
 		}
 	}
 
