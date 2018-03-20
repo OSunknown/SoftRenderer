@@ -50,6 +50,7 @@ void DrawC(int a, int b, int r)
 }
 
 
+
 void UpdateFrame(void)
 {
 	// Buffer Clear
@@ -59,7 +60,35 @@ void UpdateFrame(void)
 	// Draw
 	SetColor(255, 0, 0);
 	//PutPixel(0, 0);
-	DrawC(50,100, 100);
+	//DrawC(50,100, 100);
+
+	static float angle = 0.0f;
+	angle += 0.1f;
+
+	Vector2 Center(0.0f, 0.0f);
+	float radius = 100.0f;
+	int nradius = (int)radius;
+
+	Matrix2 Scale;
+	Scale.SetScale(1.5f,0.1f);
+
+	Matrix2 Rotation;
+	Rotation.SetRotation(angle);
+
+	for (int i = -nradius + Center.X; i < nradius+ Center.X; i++)
+	{
+		for (int j = -nradius+ Center.Y; j < nradius + Center.Y; j++)
+		{
+			Vector2 CurrentPos(i, j);
+			if (Vector2::DistSquared(Center, CurrentPos) < radius*radius)
+			{
+				Vector2 newPos = CurrentPos *Scale;
+				newPos = newPos * Rotation;
+				PutPixel(newPos.X+ Center.X, newPos.Y+ Center.Y);
+			}
+		}
+	}
+
 	// Buffer Swap 
 	BufferSwap();
 }
