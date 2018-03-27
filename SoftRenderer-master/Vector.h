@@ -15,4 +15,18 @@ public:
 	static float Dist(const Vector2 &V1,const Vector2 &V2);
 	static float DistSquared(const Vector2 &V1, const Vector2 &V2);
 	Vector2 operator *(const Matrix2 Mat) const;
+	FORCEINLINE bool Vector2::Equals(const Vector2& V, float Tolerance) const;
+
+	FORCEINLINE Vector2 operator+(const Vector2 &V) const;
+	FORCEINLINE Vector2 operator-(const Vector2 &V) const;
+	FORCEINLINE Vector2 operator*(const float &Scale) const;
+	FORCEINLINE Vector2 operator/(const float &Scale) const;
+
+	FORCEINLINE float operator|(const Vector2 &V) const;
+	FORCEINLINE float operator^(const Vector2 &V) const;
+
+	FORCEINLINE Vector2 operator+=(const Vector2 &V);
+	FORCEINLINE Vector2 operator-=(const Vector2 &V);
+	FORCEINLINE Vector2 operator*=(const float &Scale);
+	FORCEINLINE Vector2 operator/=(const float &Scale);
 };
