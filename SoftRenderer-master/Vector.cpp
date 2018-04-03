@@ -47,7 +47,7 @@ FORCEINLINE Vector2 Vector2::operator*(const float& Scale) const
 
 FORCEINLINE Vector2 Vector2::operator/(const float& Scale) const
 {
-	Vector2 result(X * Scale, Y * Scale);
+	Vector2 result(X / Scale, Y / Scale);
 	return result;
 }
 
