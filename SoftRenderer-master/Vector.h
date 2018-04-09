@@ -11,7 +11,11 @@ public:
 public:
 	Vector2() : X(0), Y(0) {}
 	Vector2(float InX, float InY) : X(InX), Y(InY) {}
-
+	void SetPoint(float InX, float InY)
+	{
+		X = InX;
+		Y = InY;
+	}
 	static float Dist(const Vector2 &V1,const Vector2 &V2);
 	static float DistSquared(const Vector2 &V1, const Vector2 &V2);
 	Vector2 operator *(const Matrix2 Mat) const;
@@ -38,7 +42,10 @@ public:
 	float X;
 	float Y;
 	float Z;
-
+public:
+	Vector3() : X(0), Y(0), Z(0){}
+	Vector3(float InX, float InY,float InZ) : X(InX), Y(InY), Z(InZ){}
+	
 	void SetPoint(float InX, float InY)
 	{
 		X = InX;
@@ -52,4 +59,22 @@ public:
 		Y = InY;
 		Z = 0.0f;
 	}
+
+	Vector3 operator *(const Matrix3 Mat) const;
+
+	Vector3 Zero()
+	{
+		Vector3 result(0.0f, 0.0f, 0.0f);
+		return result;
+	}
+
+	bool ZeroCheck()
+	{
+		return (X == 0.0f && Y == 0.0f && Z == 0.0f);
+	}
+
+	FORCEINLINE bool Vector3::Equals(const Vector3& V) const;
+	Vector3 operator*(const Matrix2 &Mat2);
+	static float Dist(const Vector3 & V1, const Vector3 & V2);
+	static float DistSquared(const Vector3 & V1, const Vector3 & V2);
 };

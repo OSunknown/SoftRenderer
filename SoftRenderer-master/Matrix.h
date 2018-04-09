@@ -18,14 +18,14 @@ public :
 		_22 = m22;
 	};
 
-	void SetScale(float a, float b)
+	void SetScale(float a, float b) //스케일
 	{
 		SetIdentity();
 		_11 = a;
 		_22 = b;
 	}
 
-	void SetIdentity()
+	void SetIdentity() //항등
 	{
 		_11 = 1.0f;
 		_12 = 0.0f;
@@ -33,7 +33,7 @@ public :
 		_22 = 1.0f;
 	};
 
-	void SetRotation(float degree)
+	void SetRotation(float degree) //회전
 	{
 		float rad = Deg2Rad(degree);
 		_11 = cosf(rad);
@@ -42,6 +42,25 @@ public :
 		_22 = cosf(rad);
 	}
 
+	void SetShear(float shx,float shy)
+	{
+		SetIdentity();
+		_12 = shx;
+		_21 = shy;
+	}
+
+	void SetMirror()
+	{
+		SetIdentity();
+		_11 = -1;
+	}
+
+	void SetReflection()
+	{
+		SetIdentity();
+		_11 = -1;
+		_22 = -1;
+	}
 	Matrix2 operator *(const Matrix2 Other) const;
 };
 
@@ -78,8 +97,13 @@ public:
 	{
 		_11 = 1.0f;
 		_12 = 0.0f;
+		_13 = 0.0f;
 		_21 = 0.0f;
 		_22 = 1.0f;
+		_23 = 0.0f;
+		_31 = 0.0f;
+		_32 = 0.0f;
+		_33 = 1.0f;
 	};
 
 	void SetRotation(float degree)
@@ -89,6 +113,19 @@ public:
 		_12 = -sinf(rad);
 		_21 = sinf(rad);
 		_22 = cosf(rad);
+	}
+
+	void SetTransfrom(float tx, float ty)
+	{
+		_11 = 1.0f;
+		_12 = 0.0f;
+		_13 = tx;
+		_21 = 0.0f;
+		_22 = 1.0f;
+		_23 = ty;
+		_31 = 0.0f;
+		_32 = 0.0f;
+		_33 = 1.0f;
 	}
 
 	Matrix3 operator *(const Matrix2 Other) const;
