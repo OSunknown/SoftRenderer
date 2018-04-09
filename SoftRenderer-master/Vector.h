@@ -30,3 +30,26 @@ public:
 	FORCEINLINE Vector2 operator*=(const float &Scale);
 	FORCEINLINE Vector2 operator/=(const float &Scale);
 };
+
+
+struct Vector3
+{
+public:
+	float X;
+	float Y;
+	float Z;
+
+	void SetPoint(float InX, float InY)
+	{
+		X = InX;
+		Y = InY;
+		Z = 1.0f;
+	}
+
+	void SetVector(float InX, float InY)
+	{
+		X = InX;
+		Y = InY;
+		Z = 0.0f;
+	}
+};

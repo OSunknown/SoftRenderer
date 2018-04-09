@@ -50,6 +50,27 @@ void DrawC(int a, int b, int r)
 }
 
 
+void DrawLine(Vector3 start, Vector3 dest)
+{
+	int XLength = (start.X - dest.X) > 0.0f ? (start.X - dest.X)  : (dest.X - start.X);
+	int YLength = (start.Y - dest.Y) > 0.0f ? (start.Y - dest.Y) : (dest.Y - start.Y);
+	float Xpoint =(start.X - dest.X) > 0.0f ? (start.X - dest.X)/ XLength : (start.X - dest.X)/ XLength * -1;
+	float Ypoint = (start.Y - dest.Y) > 0.0f ? (start.Y - dest.Y)/ YLength : (start.Y - dest.Y)/ YLength * -1;
+	Vector3 StartPoint = start;
+	while (true)
+	{
+		if (StartPoint.X >= dest.X && StartPoint.Y >= dest.Y)
+		{
+			break;
+		}
+		else
+		{
+			PutPixel(StartPoint.X, StartPoint.Y);
+			StartPoint.X += Xpoint;
+			StartPoint.Y += Ypoint;
+		}
+	}
+}
 
 void UpdateFrame(void)
 {
@@ -57,11 +78,19 @@ void UpdateFrame(void)
 	SetColor(32, 128, 255);
 	Clear();
 
-	// Draw
+	Vector3 Pt1, Pt2;
+	Pt1.SetPoint(-100, -100);
+	Pt2.SetPoint(100, 10);
 	SetColor(255, 0, 0);
+	DrawLine(Pt1, Pt2);
+
+	// Draw
+	//SetColor(255, 0, 0);
 	//PutPixel(0, 0);
 	//DrawC(50,100, 100);
 
+	
+	/*
 	static float angle = 0.0f;
 	angle += 0.1f;
 
@@ -87,7 +116,8 @@ void UpdateFrame(void)
 				PutPixel(newPos.X+ Center.X, newPos.Y+ Center.Y);
 			}
 		}
-	}
+	}*/
+
 
 	// Buffer Swap 
 	BufferSwap();
