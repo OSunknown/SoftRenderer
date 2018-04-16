@@ -2,68 +2,50 @@
 
 #include "stdafx.h"
 
-
-
 struct Matrix2
 {
-public :
+public:
 	float _11, _12;
 	float _21, _22;
+
 	Matrix2() {};
 	Matrix2(float m11, float m12, float m21, float m22)
 	{
 		_11 = m11;
 		_12 = m12;
+
 		_21 = m21;
 		_22 = m22;
 	};
 
-	void SetScale(float a, float b) //스케일
+	void SetScale(float a, float b)
 	{
 		SetIdentity();
+		// Add Code Here
 		_11 = a;
 		_22 = b;
 	}
 
-	void SetIdentity() //항등
+	void SetIdentity()
 	{
 		_11 = 1.0f;
 		_12 = 0.0f;
+
 		_21 = 0.0f;
 		_22 = 1.0f;
 	};
 
-	void SetRotation(float degree) //회전
+	void SetRotation(float degree)
 	{
-		float rad = Deg2Rad(degree);
-		_11 = cosf(rad);
-		_12 = -sinf(rad);
-		_21 = sinf(rad);
-		_22 = cosf(rad);
+		float radian = Deg2Rad(degree);
+		_11 = cosf(radian);
+		_12 = -sinf(radian);
+		_21 = sinf(radian);
+		_22 = cosf(radian);
 	}
 
-	void SetShear(float shx,float shy)
-	{
-		SetIdentity();
-		_12 = shx;
-		_21 = shy;
-	}
-
-	void SetMirror()
-	{
-		SetIdentity();
-		_11 = -1;
-	}
-
-	void SetReflection()
-	{
-		SetIdentity();
-		_11 = -1;
-		_22 = -1;
-	}
 	Matrix2 operator *(const Matrix2 Other) const;
 };
-
 
 struct Matrix3
 {
@@ -72,25 +54,22 @@ public:
 	float _21, _22, _23;
 	float _31, _32, _33;
 
-	Matrix3() {};
-	Matrix3(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33 )
+	Matrix3() : _11(0), _12(0), _13(0), _21(0), _22(0), _23(0), _31(0), _32(0), _33(0)
 	{
-		_11 = m11;
-		_12 = m12;
-		_13 = m13;
-		_21 = m21;
-		_22 = m22;
-		_23 = m23;
-		_31 = m31;
-		_32 = m32;
-		_33 = m33;
 	};
 
-	void SetScale(float a, float b)
+	void SetTranslation(float InX, float InY)
+	{
+		SetIdentity();
+		_13 = InX;
+		_23 = InY;
+	}
+
+	void SetScale(float a)
 	{
 		SetIdentity();
 		_11 = a;
-		_22 = b;
+		_22 = a;
 	}
 
 	void SetIdentity()
@@ -108,25 +87,12 @@ public:
 
 	void SetRotation(float degree)
 	{
-		float rad = Deg2Rad(degree);
-		_11 = cosf(rad);
-		_12 = -sinf(rad);
-		_21 = sinf(rad);
-		_22 = cosf(rad);
+		SetIdentity();
+		_11 = cosf(Deg2Rad(degree));
+		_12 = -sinf(Deg2Rad(degree));
+		_21 = -_12;
+		_22 = _11;
 	}
 
-	void SetTransfrom(float tx, float ty)
-	{
-		_11 = 1.0f;
-		_12 = 0.0f;
-		_13 = tx;
-		_21 = 0.0f;
-		_22 = 1.0f;
-		_23 = ty;
-		_31 = 0.0f;
-		_32 = 0.0f;
-		_33 = 1.0f;
-	}
-
-	Matrix3 operator *(const Matrix2 Other) const;
+	Matrix3 operator *(const Matrix3 Other) const;
 };
