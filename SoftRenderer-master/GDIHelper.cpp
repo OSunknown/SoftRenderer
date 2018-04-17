@@ -22,6 +22,11 @@ void SetColor(BYTE r, BYTE g, BYTE b)
 	g_CurrentColor = RGB(b, g, r);
 }
 
+void SetColor(ULONG Color)
+{
+	g_CurrentColor = Color;
+}
+
 void Clear()
 {
 	ULONG* dest = (ULONG*)g_pBits;

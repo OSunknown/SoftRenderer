@@ -40,7 +40,7 @@ void DrawLine(const Vector3& start, const Vector3& end)
 
 void Draw2DTriangle(const Vector3& v1, const Vector3& v2, const Vector3& v3)
 {
-	/*float xMin, yMin;
+	float xMin, yMin;
 	float xMax, yMax;
 	xMin = yMin = INFINITY;
 	xMax = yMax = -INFINITY;
@@ -80,22 +80,27 @@ void Draw2DTriangle(const Vector3& v1, const Vector3& v2, const Vector3& v3)
 
 			PutPixel(IntPoint(x, y));
 		}
-	}*/
+	}
 
-	Triangle tri(v1, v2, v3);
+	
 
+	
+}
+
+void Draw2DTriangle(Triangle tri)
+{
 	for (int y = RoundToInt(tri.yMin); y < RoundToInt(tri.yMax); y++)
 	{
 		for (int x = RoundToInt(tri.xMin); x < RoundToInt(tri.xMax); x++)
 		{
 			if (tri.IsInTriangle(x, y))
 			{
+				g_CurrentColor = (tri.GetColor(x,y));
 				PutPixel(IntPoint(x, y));
 			}
 		}
 	}
 }
-
 
 void UpdateFrame(void)
 {
@@ -123,14 +128,21 @@ void UpdateFrame(void)
 	RMat.SetRotation(angle);
 	SMat.SetScale(scale);
 	Matrix3 TRSMat = TMat * RMat * SMat;
-
+	
 	Pt1.SetPoint(0.0f, 0.0f);
 	Pt2.SetPoint(160.0f, 160.0f);
 	Pt3.SetPoint(-20.0f, 160.0f);
-
+	/*
 	SetColor(255, 0, 0);
 	Draw2DTriangle(Pt1 * TRSMat, Pt2 * TRSMat, Pt3 * TRSMat);
+	*/
 
+	//
+	Vertex v1(Pt1 * TRSMat, RGB(255, 0, 0));
+	Vertex v2(Pt2 * TRSMat, RGB(0, 255, 0));
+	Vertex v3(Pt3 * TRSMat, RGB(0, 0, 255));
+	Triangle tri(v1, v2, v3);
+	Draw2DTriangle(tri);
 	// Buffer Swap 
 	BufferSwap();
 }

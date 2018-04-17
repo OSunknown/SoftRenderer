@@ -1,5 +1,24 @@
 ﻿  Renderer.cpp
-d:\ppproject\softrenderer-master\renderer.cpp(91): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\khw\documents\github\softrenderer\softrenderer-master\triangle.h(93): warning C4244: '초기화 중': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\khw\documents\github\softrenderer\softrenderer-master\triangle.h(94): warning C4244: '초기화 중': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\khw\documents\github\softrenderer\softrenderer-master\triangle.h(95): warning C4244: '초기화 중': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\khw\documents\github\softrenderer\softrenderer-master\triangle.h(97): warning C4244: '초기화 중': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\khw\documents\github\softrenderer\softrenderer-master\triangle.h(98): warning C4244: '초기화 중': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\khw\documents\github\softrenderer\softrenderer-master\triangle.h(99): warning C4244: '초기화 중': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\khw\documents\github\softrenderer\softrenderer-master\triangle.h(101): warning C4244: '초기화 중': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\khw\documents\github\softrenderer\softrenderer-master\triangle.h(102): warning C4244: '초기화 중': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\khw\documents\github\softrenderer\softrenderer-master\triangle.h(103): warning C4244: '초기화 중': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\khw\documents\github\softrenderer\softrenderer-master\renderer.cpp(96): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\khw\documents\github\softrenderer\softrenderer-master\renderer.cpp(98): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Triangle.cpp
+c:\users\khw\documents\github\softrenderer\softrenderer-master\triangle.h(93): warning C4244: '초기화 중': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\khw\documents\github\softrenderer\softrenderer-master\triangle.h(94): warning C4244: '초기화 중': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\khw\documents\github\softrenderer\softrenderer-master\triangle.h(95): warning C4244: '초기화 중': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\khw\documents\github\softrenderer\softrenderer-master\triangle.h(97): warning C4244: '초기화 중': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\khw\documents\github\softrenderer\softrenderer-master\triangle.h(98): warning C4244: '초기화 중': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\khw\documents\github\softrenderer\softrenderer-master\triangle.h(99): warning C4244: '초기화 중': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\khw\documents\github\softrenderer\softrenderer-master\triangle.h(101): warning C4244: '초기화 중': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\khw\documents\github\softrenderer\softrenderer-master\triangle.h(102): warning C4244: '초기화 중': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\khw\documents\github\softrenderer\softrenderer-master\triangle.h(103): warning C4244: '초기화 중': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   코드를 생성하고 있습니다...
-  SoftRenderer.vcxproj -> D:\PPProject\SoftRenderer-master\x64\Debug\SoftRenderer.exe
+  SoftRenderer.vcxproj -> C:\Users\khw\Documents\GitHub\SoftRenderer\SoftRenderer-master\x64\Debug\SoftRenderer.exe
