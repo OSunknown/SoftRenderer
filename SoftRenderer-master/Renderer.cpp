@@ -171,7 +171,7 @@ void UpdateFrame(void)
 		Vertex(Pt1 * TRSMat, RGB(255, 0, 0)),
 		Vertex(Pt2 * TRSMat, RGB(0, 255, 0)),
 		Vertex(Pt3 * TRSMat, RGB(0, 0, 255)),
-		Vertex(Pt4 * TRSMat, RGB(0, 255, 0))
+		Vertex(Pt4 * TRSMat, RGB(255, 255, 0))
 	};
 	int index[6] = {
 		0, 1, 2, 0, 1, 3

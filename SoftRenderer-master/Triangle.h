@@ -136,6 +136,7 @@ public:
 	Vector2 U, V, W;
 	float invDenom;
 	int TriangleCount = 0;
+	int TriangleIndex = 0;
 public:
 	Mesh() {
 		xMin = yMin = INFINITY;
@@ -196,13 +197,14 @@ public:
 
 	void SetTriangle(int triangleIndex)
 	{
+		TriangleIndex = triangleIndex;
 		for (int i = 0; i < 3; i++)
 		{
-			SetPoint(vertices[index[3 * triangleIndex + i]].position);
+			SetPoint(vertices[index[3 * TriangleIndex + i]].position);
 		}
 		
-		U = (vertices[index[3*triangleIndex+1]].position - vertices[index[3 * triangleIndex]].position).ToVector2();
-		V = (vertices[index[3 * triangleIndex + 2]].position - vertices[index[3 * triangleIndex]].position).ToVector2();
+		U = (vertices[index[3* TriangleIndex +1]].position - vertices[index[3 * TriangleIndex]].position).ToVector2();
+		V = (vertices[index[3 * TriangleIndex + 2]].position - vertices[index[3 * TriangleIndex]].position).ToVector2();
 		invDenom = 1.0f / (U.Dot(U) *V.Dot(V) - U.Dot(V) * V.Dot(U));
 	}
 
@@ -230,17 +232,17 @@ public:
 		float s = ((V.Dot(V)*W.Dot(U)) - (V.Dot(U)*W.Dot(V))) * invDenom;
 		float t = (U.Dot(U)*W.Dot(V) - U.Dot(V)*W.Dot(U)) * invDenom;
 
-		BYTE RV0 = GetRValue(vertices[0].color) * (1.0f - s - t);
-		BYTE GV0 = GetGValue(vertices[0].color) * (1.0f - s - t);
-		BYTE BV0 = GetBValue(vertices[0].color) * (1.0f - s - t);
+		BYTE RV0 = GetRValue(vertices[index[3 * TriangleIndex]].color) * (1.0f - s - t);
+		BYTE GV0 = GetGValue(vertices[index[3 * TriangleIndex]].color) * (1.0f - s - t);
+		BYTE BV0 = GetBValue(vertices[index[3 * TriangleIndex]].color) * (1.0f - s - t);
 
-		BYTE RV1 = GetRValue(vertices[1].color) * s;
-		BYTE GV1 = GetGValue(vertices[1].color) * s;
-		BYTE BV1 = GetBValue(vertices[1].color) * s;
+		BYTE RV1 = GetRValue(vertices[index[3 * TriangleIndex + 1]].color) * s;
+		BYTE GV1 = GetGValue(vertices[index[3 * TriangleIndex + 1]].color) * s;
+		BYTE BV1 = GetBValue(vertices[index[3 * TriangleIndex + 1]].color) * s;
 
-		BYTE RV2 = GetRValue(vertices[2].color) * t;
-		BYTE GV2 = GetGValue(vertices[2].color) * t;
-		BYTE BV2 = GetBValue(vertices[2].color) * t;
+		BYTE RV2 = GetRValue(vertices[index[3 * TriangleIndex + 2]].color) * t;
+		BYTE GV2 = GetGValue(vertices[index[3 * TriangleIndex + 2]].color) * t;
+		BYTE BV2 = GetBValue(vertices[index[3 * TriangleIndex + 2]].color) * t;
 
 		BYTE R = RV0 + RV1 + RV2;
 		BYTE G = GV0 + GV1 + GV2;
