@@ -5,6 +5,7 @@
 #include "GDIHelper.h"
 #include "Renderer.h"
 #include "Triangle.h"
+#include "Texture.h"
 bool IsInRange(int x, int y);
 void PutPixel(int x, int y);
 
@@ -102,6 +103,27 @@ void Draw2DTriangle(Triangle tri)
 	}
 }
 
+
+void Draw2DMesh(Mesh mesh)
+{
+	for (int i = 0; i < mesh.TriangleCount; i++)
+	{
+		mesh.SetTriangle(i);
+		for (int y = RoundToInt(mesh.yMin); y < RoundToInt(mesh.yMax); y++)
+		{
+			for (int x = RoundToInt(mesh.xMin); x < RoundToInt(mesh.xMax); x++)
+			{
+				if (mesh.IsInTriangle(x, y))
+				{
+					g_CurrentColor = (mesh.GetColor(x, y));
+					PutPixel(IntPoint(x, y));
+				}
+			}
+		}
+	}
+	
+}
+
 void UpdateFrame(void)
 {
 	// Buffer Clear
@@ -109,7 +131,7 @@ void UpdateFrame(void)
 	Clear();
 
 	// Draw
-	Vector3 Pt1, Pt2, Pt3;
+	Vector3 Pt1, Pt2, Pt3, Pt4;
 
 	static float offsetX = 0.0f;
 	//static float offsetY = 0.0f;
@@ -131,18 +153,32 @@ void UpdateFrame(void)
 	
 	Pt1.SetPoint(0.0f, 0.0f);
 	Pt2.SetPoint(160.0f, 160.0f);
-	Pt3.SetPoint(-20.0f, 160.0f);
+	Pt3.SetPoint(0.0f, 160.0f);
+	Pt4.SetPoint(160.0f, 0.0f);
 	/*
 	SetColor(255, 0, 0);
 	Draw2DTriangle(Pt1 * TRSMat, Pt2 * TRSMat, Pt3 * TRSMat);
 	*/
 
 	//
-	Vertex v1(Pt1 * TRSMat, RGB(255, 0, 0));
+	/*Vertex v1(Pt1 * TRSMat, RGB(255, 0, 0));
 	Vertex v2(Pt2 * TRSMat, RGB(0, 255, 0));
 	Vertex v3(Pt3 * TRSMat, RGB(0, 0, 255));
 	Triangle tri(v1, v2, v3);
-	Draw2DTriangle(tri);
+	Draw2DTriangle(tri);*/
+
+	Vertex v[4] = {
+		Vertex(Pt1 * TRSMat, RGB(255, 0, 0)),
+		Vertex(Pt2 * TRSMat, RGB(0, 255, 0)),
+		Vertex(Pt3 * TRSMat, RGB(0, 0, 255)),
+		Vertex(Pt4 * TRSMat, RGB(0, 255, 0))
+	};
+	int index[6] = {
+		0, 1, 2, 0, 1, 3
+	};
+	Mesh m(v,4);
+	m.SetIndex(index,6);
+	Draw2DMesh(m);
 	// Buffer Swap 
 	BufferSwap();
 }

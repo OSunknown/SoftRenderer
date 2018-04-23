@@ -20,6 +20,14 @@ Vector2 Vector2::operator*(Matrix2 Mat) const
 	return result;
 }
 
+Vector2 Vector2::operator*(float scale) const
+{
+	Vector2 result;
+	result.X = X * scale;
+	result.Y = Y * scale;
+	return result;
+}
+
 Vector3 Vector3::operator*(float scale) const
 {
 	Vector3 result;

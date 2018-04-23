@@ -27,9 +27,11 @@ public:
 
 	static float Dist(const Vector2 &V1, const Vector2 &V2);
 	static float DistSquared(const Vector2 &V1, const Vector2 &V2);
-
-	Vector2 operator *(const Matrix2 Mat) const;
+	
+	Vector2 operator +(const Vector2& V) const;
 	Vector2 operator -(const Vector2& V) const;
+	Vector2 operator *(const Matrix2 Mat) const;
+	Vector2 operator *(float scale) const;
 	bool Equals(const Vector2& V, float Tolerance = KINDA_SMALL_NUMBER) const;
 
 	IntPoint ToIntPoint() 
@@ -47,6 +49,14 @@ public:
 FORCEINLINE bool Vector2::Equals(const Vector2& V, float Tolerance) const
 {
 	return fabs(X - V.X) <= Tolerance && fabs(Y - V.Y) <= Tolerance;
+}
+
+FORCEINLINE Vector2 Vector2::operator+(const Vector2& V) const
+{
+	Vector2 result;
+	result.X = X + V.X;
+	result.Y = Y + V.Y;
+	return result;
 }
 
 FORCEINLINE Vector2 Vector2::operator-(const Vector2& V) const
