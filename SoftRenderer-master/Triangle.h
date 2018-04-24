@@ -134,6 +134,7 @@ public:
 	float xMin, yMin;
 	float xMax, yMax;
 	Vector2 U, V, W;
+	float s,t;
 	float invDenom;
 	int TriangleCount = 0;
 	int TriangleIndex = 0;
@@ -192,7 +193,7 @@ public:
 		{
 			index[i] = Inindex[i];
 		}
-		TriangleCount = count / 3.0f;
+		TriangleCount = count / 3;
 	}
 
 	void SetTriangle(int triangleIndex)
@@ -208,12 +209,17 @@ public:
 		invDenom = 1.0f / (U.Dot(U) *V.Dot(V) - U.Dot(V) * V.Dot(U));
 	}
 
+	Triangle GetTriangle()
+	{
+		return Triangle(vertices[index[3 * TriangleIndex]], vertices[index[3 * TriangleIndex + 1]], vertices[index[3 * TriangleIndex + 2]]);
+	}
+
 	bool IsInTriangle(float X, float Y) {
 		//Point 가 점 D
 		W.X = X - vertices[0].position.X;
 		W.Y = Y - vertices[0].position.Y;
-		float s = ((V.Dot(V)*W.Dot(U)) - (V.Dot(U)*W.Dot(V))) * invDenom;
-		float t = (U.Dot(U)*W.Dot(V) - U.Dot(V)*W.Dot(U)) * invDenom;
+		s = ((V.Dot(V)*W.Dot(U)) - (V.Dot(U)*W.Dot(V))) * invDenom;
+		t = (U.Dot(U)*W.Dot(V) - U.Dot(V)*W.Dot(U)) * invDenom;
 
 		if (s<0.0f || t <0.0f) //이거 없으면 사각형됨..
 		{

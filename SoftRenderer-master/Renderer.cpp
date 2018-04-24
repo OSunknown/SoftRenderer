@@ -115,7 +115,15 @@ void Draw2DMesh(Mesh mesh)
 			{
 				if (mesh.IsInTriangle(x, y))
 				{
-					g_CurrentColor = (mesh.GetColor(x, y));
+					if (g_Texture->IsLoaded())
+					{
+						g_CurrentColor = g_Texture->GetTexturePixel(mesh.s, mesh.t, mesh.GetTriangle());
+					}
+					else
+					{
+						g_CurrentColor = (mesh.GetColor(x, y));
+					}
+					
 					PutPixel(IntPoint(x, y));
 				}
 			}
@@ -168,10 +176,10 @@ void UpdateFrame(void)
 	Draw2DTriangle(tri);*/
 
 	Vertex v[4] = {
-		Vertex(Pt1 * TRSMat, RGB(255, 0, 0)),
-		Vertex(Pt2 * TRSMat, RGB(0, 255, 0)),
-		Vertex(Pt3 * TRSMat, RGB(0, 0, 255)),
-		Vertex(Pt4 * TRSMat, RGB(255, 255, 0))
+		Vertex(Pt1 * TRSMat, RGB(255, 0, 0),Vector2(0.0f,1.0f)),
+		Vertex(Pt2 * TRSMat, RGB(0, 255, 0),Vector2(1.0f,0.0f)),
+		Vertex(Pt3 * TRSMat, RGB(0, 0, 255),Vector2(0.0f,0.0f)),
+		Vertex(Pt4 * TRSMat, RGB(255, 255, 0),Vector2(1.0f,1.0f))
 	};
 	int index[6] = {
 		0, 1, 2, 0, 1, 3
