@@ -1,17 +1,35 @@
-
 #include "stdafx.h"
 #include "Vector.h"
 #include "SoftRenderer.h"
 #include "GDIHelper.h"
-#include "Renderer.h"
 #include "Triangle.h"
 #include "Texture.h"
+#include "Mesh.h"
+#include "Renderer.h"
 bool IsInRange(int x, int y);
 void PutPixel(int x, int y);
 
 bool IsInRange(int x, int y)
 {
 	return (abs(x) < (g_nClientWidth / 2)) && (abs(y) < (g_nClientHeight / 2));
+}
+
+void DrowCall(Mesh * MeshToDrow)
+{
+	for (int i = 0; i < MeshToDrow->VSize; i++)
+	{
+
+	}
+}
+
+V2F_CUSTOM VertexShader(APPDATA_CUSTOM in)
+{//TRS Matrix 반영해서 변환된 Position 돌려주기.
+	return V2F_CUSTOM();
+}
+
+ULONG FragmentShader(V2F_CUSTOM in)
+{
+	return 0;
 }
 
 void PutPixel(IntPoint pt)
@@ -113,7 +131,7 @@ void Draw2DMesh(Mesh mesh)
 		{
 			for (int x = RoundToInt(mesh.xMin); x < RoundToInt(mesh.xMax); x++)
 			{
-				if (mesh.IsInTriangle(x, y))
+				if (mesh.IsInTriangle((float)x+0.5f, (float)y+0.5f))
 				{
 					if (g_Texture->IsLoaded())
 					{
@@ -153,40 +171,43 @@ void UpdateFrame(void)
 	if (GetAsyncKeyState(VK_PRIOR)) scale *= 1.01f;
 	if (GetAsyncKeyState(VK_NEXT)) scale *= 0.99f;
 
-	Matrix3 TMat, RMat, SMat;
-	TMat.SetTranslation(offsetX, 0.0f);
-	RMat.SetRotation(angle);
-	SMat.SetScale(scale);
-	Matrix3 TRSMat = TMat * RMat * SMat;
-	
-	Pt1.SetPoint(0.0f, 0.0f);
-	Pt2.SetPoint(160.0f, 160.0f);
-	Pt3.SetPoint(0.0f, 160.0f);
-	Pt4.SetPoint(160.0f, 0.0f);
-	/*
-	SetColor(255, 0, 0);
-	Draw2DTriangle(Pt1 * TRSMat, Pt2 * TRSMat, Pt3 * TRSMat);
-	*/
-
+	//Matrix3 TMat, RMat, SMat;
+	//TMat.SetTranslation(offsetX, 0.0f);
+	//RMat.SetRotation(angle);
+	//SMat.SetScale(scale);
+	//Matrix3 TRSMat = TMat * RMat * SMat;
 	//
-	/*Vertex v1(Pt1 * TRSMat, RGB(255, 0, 0));
-	Vertex v2(Pt2 * TRSMat, RGB(0, 255, 0));
-	Vertex v3(Pt3 * TRSMat, RGB(0, 0, 255));
-	Triangle tri(v1, v2, v3);
-	Draw2DTriangle(tri);*/
+	//Pt1.SetPoint(0.0f, 0.0f);
+	//Pt2.SetPoint(160.0f, 160.0f);
+	//Pt3.SetPoint(0.0f, 160.0f);
+	//Pt4.SetPoint(160.0f, 0.0f);
+	///*
+	//SetColor(255, 0, 0);
+	//Draw2DTriangle(Pt1 * TRSMat, Pt2 * TRSMat, Pt3 * TRSMat);
+	//*/
 
-	Vertex v[4] = {
-		Vertex(Pt1 * TRSMat, RGB(255, 0, 0),Vector2(0.0f,1.0f)),
-		Vertex(Pt2 * TRSMat, RGB(0, 255, 0),Vector2(1.0f,0.0f)),
-		Vertex(Pt3 * TRSMat, RGB(0, 0, 255),Vector2(0.0f,0.0f)),
-		Vertex(Pt4 * TRSMat, RGB(255, 255, 0),Vector2(1.0f,1.0f))
-	};
-	int index[6] = {
-		0, 1, 2, 0, 1, 3
-	};
-	Mesh m(v,4);
-	m.SetIndex(index,6);
-	Draw2DMesh(m);
+	////
+	///*Vertex v1(Pt1 * TRSMat, RGB(255, 0, 0));
+	//Vertex v2(Pt2 * TRSMat, RGB(0, 255, 0));
+	//Vertex v3(Pt3 * TRSMat, RGB(0, 0, 255));
+	//Triangle tri(v1, v2, v3);
+	//Draw2DTriangle(tri);*/
+
+	//Vertex v[4] = {
+	//	Vertex(Pt1 * TRSMat, RGB(255, 0, 0),Vector2(0.0f,1.0f)),
+	//	Vertex(Pt2 * TRSMat, RGB(0, 255, 0),Vector2(1.0f,0.0f)),
+	//	Vertex(Pt3 * TRSMat, RGB(0, 0, 255),Vector2(0.0f,0.0f)),
+	//	Vertex(Pt4 * TRSMat, RGB(255, 255, 0),Vector2(1.0f,1.0f))
+	//};
+	//int index[6] = {
+	//	0, 1, 2, 0, 1, 3
+	//};
+	//Mesh m(v,4);
+	//m.SetIndex(index,6);
+	//Draw2DMesh(m);
+
+	//1. Mesh
+
 	// Buffer Swap 
 	BufferSwap();
 }
