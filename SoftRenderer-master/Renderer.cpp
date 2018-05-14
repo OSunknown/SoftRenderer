@@ -6,40 +6,53 @@
 #include "Texture.h"
 #include "Mesh.h"
 #include "Renderer.h"
+#include "Material.h"
 bool IsInRange(int x, int y);
-void PutPixel(int x, int y);
+void PutPixel(IntPoint pt)
+{
+	if (!IsInRange(pt.X, pt.Y)) return;
+
+	ULONG* dest = (ULONG*)g_pBits;
+
+	int halfWidth = RoundToInt(g_nClientWidth * 0.5f);
+	int halfHeight = RoundToInt(g_nClientHeight * 0.5f);
+
+	DWORD offset = (halfHeight * g_nClientWidth - g_nClientWidth * pt.Y) + (halfWidth + pt.X);
+	*(dest + offset) = g_CurrentColor;
+}
 
 bool IsInRange(int x, int y)
 {
 	return (abs(x) < (g_nClientWidth / 2)) && (abs(y) < (g_nClientHeight / 2));
 }
 
-void DrowCall(Mesh * MeshToDrow)
-{
-	for (int i = 0; i < MeshToDrow->VSize; i++)
-	{
 
-	}
+Vertex VertexShader(Vertex in)
+{
+	Vertex result;
+	result.position = in.position;// TRS Matrix 반영해서 변환된 position 돌려주기..
+	result.uv = in.uv;
+	result.color = in.color;
+	return result;
 }
 
 V2F_CUSTOM VertexShader(APPDATA_CUSTOM in)
-{//TRS Matrix 반영해서 변환된 Position 돌려주기.
+{
+	// TRS Matrix 반영해서 변환된 position 돌려주기..
 	return V2F_CUSTOM();
 }
 
-ULONG FragmentShader(V2F_CUSTOM in)
+ULONG FragmentShader(V2F_CUSTOM in, float s, float t)
 {
-	return 0;
+	// Texture에서 색상 빼오기..
+	if (g_Texture->IsLoaded())
+	{
+		return g_Texture->TextureSample(in.uv, s, t);
+	}
+
+	return in.color;
 }
 
-void PutPixel(IntPoint pt)
-{
-	if (!IsInRange(pt.X, pt.Y)) return;
-
-	ULONG* dest = (ULONG*)g_pBits;
-	DWORD offset = g_nClientWidth * g_nClientHeight / 2 + g_nClientWidth / 2 + pt.X + g_nClientWidth * -pt.Y;
-	*(dest + offset) = g_CurrentColor;
-}
 
 void DrawLine(const Vector3& start, const Vector3& end)
 {
@@ -104,7 +117,7 @@ void Draw2DTriangle(const Vector3& v1, const Vector3& v2, const Vector3& v3)
 	
 
 	
-}
+}/*
 
 void Draw2DTriangle(Triangle tri)
 {
@@ -119,35 +132,17 @@ void Draw2DTriangle(Triangle tri)
 			}
 		}
 	}
-}
+}*/
 
 
 void Draw2DMesh(Mesh mesh)
 {
-	for (int i = 0; i < mesh.TriangleCount; i++)
-	{
-		mesh.SetTriangle(i);
-		for (int y = RoundToInt(mesh.yMin); y < RoundToInt(mesh.yMax); y++)
-		{
-			for (int x = RoundToInt(mesh.xMin); x < RoundToInt(mesh.xMax); x++)
-			{
-				if (mesh.IsInTriangle((float)x+0.5f, (float)y+0.5f))
-				{
-					if (g_Texture->IsLoaded())
-					{
-						g_CurrentColor = g_Texture->GetTexturePixel(mesh.s, mesh.t, mesh.GetTriangle());
-					}
-					else
-					{
-						g_CurrentColor = (mesh.GetColor(x, y));
-					}
-					
-					PutPixel(IntPoint(x, y));
-				}
-			}
-		}
-	}
 	
+}
+
+
+void InitFrame(void)
+{
 }
 
 void UpdateFrame(void)
@@ -171,11 +166,21 @@ void UpdateFrame(void)
 	if (GetAsyncKeyState(VK_PRIOR)) scale *= 1.01f;
 	if (GetAsyncKeyState(VK_NEXT)) scale *= 0.99f;
 
-	//Matrix3 TMat, RMat, SMat;
-	//TMat.SetTranslation(offsetX, 0.0f);
-	//RMat.SetRotation(angle);
-	//SMat.SetScale(scale);
-	//Matrix3 TRSMat = TMat * RMat * SMat;
+	Matrix3 TMat, RMat, SMat;
+	TMat.SetTranslation(offsetX, 0.0f);
+	RMat.SetRotation(angle);
+	SMat.SetScale(scale);
+	Matrix3 TRSMat = TMat * RMat * SMat;
+
+	Sprite sp;
+
+	Sprite sp2(Vector3(80,80,0),160,160);
+	sp2.DrawCall(TRSMat);
+	Material mat;
+	mat.DrawCall(sp, TRSMat);
+
+	//DrawCall(sp);
+	
 	//
 	//Pt1.SetPoint(0.0f, 0.0f);
 	//Pt2.SetPoint(160.0f, 160.0f);

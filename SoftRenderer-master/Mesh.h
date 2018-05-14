@@ -1,23 +1,20 @@
 #pragma once
 #include "stdafx.h"
-#include "Triangle.h"
 #include "Vertex.h"
 struct Mesh
 {
 public:
 	Vertex* Vertices;
-	int* Indices;
+	unsigned int* Indices; //unity 에선 Triangles 라는 듯.
 	size_t VSize; //Vertex size
 	size_t ISize; //IndexSize
 public:
-	Mesh() : Vertices(NULL), Indices(NULL), ISize(0), VSize(0) { }
+	Mesh() : Vertices(NULL), Indices(NULL), ISize(0), VSize(0) { };
 	~Mesh() {
-		
 		if (NULL != Vertices)
 		{
 			Vertices = NULL;
 		}
-
 		if (NULL != Indices)
 		{
 			Indices = NULL;
@@ -30,9 +27,14 @@ public:
 		VSize = count;
 	}
 
-	void SetIndices(int* indices, size_t count)
+	void SetIndices(unsigned int* indices, size_t count)
 	{
 		Indices = indices;
 		ISize = count;
+	}
+
+	Vertex GetVertex(int index)
+	{
+		return Vertices[index];
 	}
 };

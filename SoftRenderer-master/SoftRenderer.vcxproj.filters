@@ -72,6 +72,15 @@
     <ClInclude Include="Triangle.h">
       <Filter>Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -106,6 +115,15 @@
     </ClCompile>
     <ClCompile Include="Triangle.cpp">
       <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -19,7 +19,19 @@ public:
 		color = c;
 		uv = InUV;
 	}
+	Vertex(const Vertex* vertex)
+	{
+		position = vertex->position;
+		color = vertex->color;
+		uv = vertex->uv;
+	}
 	Vector3 position;
 	ULONG color;
 	Vector2 uv;
 };
+
+// Render Queue 는 낮을 수록 먼저 그려지고
+// 높을 수록 나중에 그려짐으로 인해서
+//
+
+//ZBuffer 는 깊이값.?
