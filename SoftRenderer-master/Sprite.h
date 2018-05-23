@@ -20,7 +20,7 @@ public:
 	{
 		spriteInit(Inposition, width, height);
 	}
-	~Sprite() {};
+	~Sprite() {	};
 public:
 	void spriteInit()
 	{

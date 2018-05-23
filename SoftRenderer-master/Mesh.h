@@ -13,10 +13,12 @@ public:
 	~Mesh() {
 		if (NULL != Vertices)
 		{
+			delete[] Vertices;
 			Vertices = NULL;
 		}
 		if (NULL != Indices)
 		{
+			delete[] Indices;
 			Indices = NULL;
 		}
 	}
