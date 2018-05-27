@@ -5,7 +5,7 @@ struct Mesh
 {
 public:
 	Vertex* Vertices;
-	unsigned int* Indices; //unity 에선 Triangles 라는 듯.
+	int* Indices; //unity 에선 Triangles 라는 듯.
 	size_t VSize; //Vertex size
 	size_t ISize; //IndexSize
 public:
@@ -23,13 +23,14 @@ public:
 		}
 	}
 public:
+	bool IsInitialized() { return ((NULL != Vertices) && (NULL != Indices) && (ISize % 3 == 0)); }
 	void SetVertices(Vertex* vertices, size_t count)
 	{
 		Vertices = vertices;
 		VSize = count;
 	}
 
-	void SetIndices(unsigned int* indices, size_t count)
+	void SetIndices(int* indices, size_t count)
 	{
 		Indices = indices;
 		ISize = count;

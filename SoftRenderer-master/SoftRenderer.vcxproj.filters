@@ -75,11 +75,14 @@
     <ClInclude Include="Sprite.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform2D.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteRenderer.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -119,11 +122,14 @@
     <ClCompile Include="Sprite.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform2D.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteRenderer.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

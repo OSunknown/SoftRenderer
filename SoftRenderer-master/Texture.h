@@ -13,6 +13,7 @@ public:
 
 	bool LoadBMP(char* filename);
 	ULONG GetPixel(int x, int y);
+	ULONG GetTexturePixel(Vector2 uv);
 	ULONG GetTexturePixel(float s, float t, const Triangle& tri);
 	ULONG TextureSample(Vector2 TexCoord, float s, float t);
 	ULONG TextureSample(Vector2 TexCoord);

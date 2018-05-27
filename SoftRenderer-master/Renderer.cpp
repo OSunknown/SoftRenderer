@@ -6,8 +6,21 @@
 #include "Texture.h"
 #include "Mesh.h"
 #include "Renderer.h"
-#include "Material.h"
-bool IsInRange(int x, int y);
+#include "SpriteRenderer.h"
+#include "Transform2D.h"
+
+Mesh g_Quad;
+Matrix3 g_ShaderMatrix;
+bool g_Init = false;
+
+VertInOut VertexShader(VertInOut v);
+ULONG FragmentShader(FragIn f);
+
+bool IsInRange(int x, int y)
+{
+	return (abs(x) < (g_nClientWidth / 2)) && (abs(y) < (g_nClientHeight / 2));
+}
+
 void PutPixel(IntPoint pt)
 {
 	if (!IsInRange(pt.X, pt.Y)) return;
@@ -20,39 +33,6 @@ void PutPixel(IntPoint pt)
 	DWORD offset = (halfHeight * g_nClientWidth - g_nClientWidth * pt.Y) + (halfWidth + pt.X);
 	*(dest + offset) = g_CurrentColor;
 }
-
-bool IsInRange(int x, int y)
-{
-	return (abs(x) < (g_nClientWidth / 2)) && (abs(y) < (g_nClientHeight / 2));
-}
-
-
-Vertex VertexShader(Vertex in)
-{
-	Vertex result;
-	result.position = in.position;// TRS Matrix 반영해서 변환된 position 돌려주기..
-	result.uv = in.uv;
-	result.color = in.color;
-	return result;
-}
-
-V2F_CUSTOM VertexShader(APPDATA_CUSTOM in)
-{
-	// TRS Matrix 반영해서 변환된 position 돌려주기..
-	return V2F_CUSTOM();
-}
-
-ULONG FragmentShader(V2F_CUSTOM in, float s, float t)
-{
-	// Texture에서 색상 빼오기..
-	if (g_Texture->IsLoaded())
-	{
-		return g_Texture->TextureSample(in.uv, s, t);
-	}
-
-	return in.color;
-}
-
 
 void DrawLine(const Vector3& start, const Vector3& end)
 {
@@ -67,152 +47,154 @@ void DrawLine(const Vector3& start, const Vector3& end)
 		Vector3 Pt = start * (1.0f - t) + end * t;
 		PutPixel(Pt.ToIntPoint());
 	}
-
 }
-
-void Draw2DTriangle(const Vector3& v1, const Vector3& v2, const Vector3& v3)
-{
-	float xMin, yMin;
-	float xMax, yMax;
-	xMin = yMin = INFINITY;
-	xMax = yMax = -INFINITY;
-
-	if (v1.X < xMin) xMin = v1.X;
-	if (v2.X < xMin) xMin = v2.X;
-	if (v3.X < xMin) xMin = v3.X;
-	if (v1.X > xMax) xMax = v1.X;
-	if (v2.X > xMax) xMax = v2.X;
-	if (v3.X > xMax) xMax = v3.X;
-	if (v1.Y < yMin) yMin = v1.Y;
-	if (v2.Y < yMin) yMin = v2.Y;
-	if (v3.Y < yMin) yMin = v3.Y;
-	if (v1.Y > yMax) yMax = v1.Y;
-	if (v2.Y > yMax) yMax = v2.Y;
-	if (v3.Y > yMax) yMax = v3.Y;
-
-	Vector2 u = (v2 - v1).ToVector2();
-	Vector2 v = (v3 - v1).ToVector2();
-	float dotUU = u.Dot(u);
-	float dotUV = u.Dot(v);
-	float dotVV = v.Dot(v);
-	float invDenom = 1.0f / (dotUU * dotVV - dotUV * dotUV);
-
-	for (int y = RoundToInt(yMin); y < RoundToInt(yMax); y++)
-	{
-		for (int x = RoundToInt(xMin); x < RoundToInt(xMax); x++)
-		{
-			Vector2 w = (Vector3((float)x, (float)y, 0.0f) - v1).ToVector2();
-			float dotUW = u.Dot(w);
-			float dotVW = v.Dot(w);
-			float outS = (dotVV * dotUW - dotUV * dotVW) * invDenom;
-			float outT = (dotUU * dotVW - dotUV * dotUW) * invDenom;
-			if (outS < 0.0f) continue;
-			if (outT < 0.0f) continue;
-			if (outS + outT > 1.0f) continue;
-
-			PutPixel(IntPoint(x, y));
-		}
-	}
-
-	
-
-	
-}/*
-
-void Draw2DTriangle(Triangle tri)
-{
-	for (int y = RoundToInt(tri.yMin); y < RoundToInt(tri.yMax); y++)
-	{
-		for (int x = RoundToInt(tri.xMin); x < RoundToInt(tri.xMax); x++)
-		{
-			if (tri.IsInTriangle(x, y))
-			{
-				g_CurrentColor = (tri.GetColor(x,y));
-				PutPixel(IntPoint(x, y));
-			}
-		}
-	}
-}*/
-
-
-void Draw2DMesh(Mesh mesh)
-{
-	
-}
-
 
 void InitFrame(void)
 {
+	Vertex Vertices[4] = {
+		{ { -30.0f, -30.0f, 1.0f }, RGB32(255, 0, 0) ,{ 0.125f, 0.25f } },
+	{ { -30.0f, 30.0f, 1.0f }, RGB32(0, 255, 0) ,{ 0.125f, 0.125f } },
+	{ { 30.0f, 30.0f, 1.0f }, RGB32(0, 0, 255) ,{ 0.25f, 0.125f } },
+	{ { 30.0f, -30.0f, 1.0f }, RGB32(255, 0, 255) ,{ 0.25f, 0.25f } }
+	};
+
+	int Indices[6] = { 0, 1, 2, 0, 2, 3 };
+	g_Quad.VSize = 4;
+	g_Quad.ISize = 6;
+	g_Quad.Vertices = new Vertex[g_Quad.VSize];
+	memcpy(g_Quad.Vertices, Vertices, sizeof(Vertex) * g_Quad.VSize);
+	g_Quad.Indices = new int[g_Quad.ISize];
+	memcpy(g_Quad.Indices, Indices, sizeof(int) * g_Quad.ISize);
+
+	g_Init = true;
 }
 
 void UpdateFrame(void)
 {
+	// First Frame Init
+	if (!g_Init) InitFrame();
+
 	// Buffer Clear
 	SetColor(32, 128, 255);
 	Clear();
 
-	// Draw
-	Vector3 Pt1, Pt2, Pt3, Pt4;
-
+	// Set Matrix
 	static float offsetX = 0.0f;
-	//static float offsetY = 0.0f;
 	static float angle = 0.0f;
 	static float scale = 1.0f;
+	static Vector2 camLocation(0.0f, 0.0f);
+	static float camRotation = 0.0f;
 
-	if (GetAsyncKeyState(VK_LEFT)) offsetX -= 1.0f;
-	if (GetAsyncKeyState(VK_RIGHT)) offsetX += 1.0f;
-	if (GetAsyncKeyState(VK_UP)) angle += 1.0f;
-	if (GetAsyncKeyState(VK_DOWN)) angle -= 1.0f;
-	if (GetAsyncKeyState(VK_PRIOR)) scale *= 1.01f;
-	if (GetAsyncKeyState(VK_NEXT)) scale *= 0.99f;
+	if (GetAsyncKeyState(VK_LSHIFT))
+	{
+		if (GetAsyncKeyState(VK_LEFT)) camLocation.X -= 1.0f;
+		if (GetAsyncKeyState(VK_RIGHT)) camLocation.X += 1.0f;
+		if (GetAsyncKeyState(VK_UP)) camLocation.Y += 1.0f;
+		if (GetAsyncKeyState(VK_DOWN)) camLocation.Y -= 1.0f;
+		if (GetAsyncKeyState(VK_PRIOR)) camRotation += 1.0f;
+		if (GetAsyncKeyState(VK_NEXT)) camRotation -= 1.0f;
+	}
+	else
+	{
+		if (GetAsyncKeyState(VK_LEFT)) offsetX -= 1.0f;
+		if (GetAsyncKeyState(VK_RIGHT)) offsetX += 1.0f;
+		if (GetAsyncKeyState(VK_UP)) angle += 1.0f;
+		if (GetAsyncKeyState(VK_DOWN)) angle -= 1.0f;
+		if (GetAsyncKeyState(VK_PRIOR)) scale *= 1.01f;
+		if (GetAsyncKeyState(VK_NEXT)) scale *= 0.99f;
+	}
 
-	Matrix3 TMat, RMat, SMat;
-	TMat.SetTranslation(offsetX, 0.0f);
-	RMat.SetRotation(angle);
-	SMat.SetScale(scale);
-	Matrix3 TRSMat = TMat * RMat * SMat;
+	Transform2D QuadTransform(Vector2(offsetX, 0.0f), angle, scale);
+	Matrix3 ModelMat = QuadTransform.GetTRSMatrix();
 
-	Sprite sp;
+	Transform2D CameraTransform(camLocation, camRotation, 1.0f);
+	Matrix3 ViewMat = CameraTransform.GetViewMatrix();
 
-	Sprite sp2(Vector3(80,80,0),160,160);
-	sp2.DrawCall(TRSMat);
-	Material mat;
-	mat.DrawCall(sp, TRSMat);
+	g_ShaderMatrix = ViewMat * ModelMat;
 
-	//DrawCall(sp);
-	
-	//
-	//Pt1.SetPoint(0.0f, 0.0f);
-	//Pt2.SetPoint(160.0f, 160.0f);
-	//Pt3.SetPoint(0.0f, 160.0f);
-	//Pt4.SetPoint(160.0f, 0.0f);
-	///*
-	//SetColor(255, 0, 0);
-	//Draw2DTriangle(Pt1 * TRSMat, Pt2 * TRSMat, Pt3 * TRSMat);
-	//*/
+	// Axis Draw
+	Vector3 XStart((float)g_nClientWidth * -1, 0.0f, 1.0f);
+	Vector3 XEnd((float)g_nClientWidth * 1, 0.0f, 1.0f);
+	SetColor(255, 0, 0);
+	XStart.X += CameraTransform.Location.X;
+	XEnd.X += CameraTransform.Location.X;
+	DrawLine(XStart * ViewMat, XEnd * ViewMat);
 
-	////
-	///*Vertex v1(Pt1 * TRSMat, RGB(255, 0, 0));
-	//Vertex v2(Pt2 * TRSMat, RGB(0, 255, 0));
-	//Vertex v3(Pt3 * TRSMat, RGB(0, 0, 255));
-	//Triangle tri(v1, v2, v3);
-	//Draw2DTriangle(tri);*/
+	Vector3 YStart(0.0f, (float)g_nClientHeight * -1, 1.0f);
+	Vector3 YEnd(0.0f, (float)g_nClientHeight * 1, 1.0f);
+	SetColor(0, 255, 0);
+	YStart.Y += CameraTransform.Location.Y;
+	YEnd.Y += CameraTransform.Location.Y;
+	DrawLine(YStart * ViewMat, YEnd * ViewMat);
 
-	//Vertex v[4] = {
-	//	Vertex(Pt1 * TRSMat, RGB(255, 0, 0),Vector2(0.0f,1.0f)),
-	//	Vertex(Pt2 * TRSMat, RGB(0, 255, 0),Vector2(1.0f,0.0f)),
-	//	Vertex(Pt3 * TRSMat, RGB(0, 0, 255),Vector2(0.0f,0.0f)),
-	//	Vertex(Pt4 * TRSMat, RGB(255, 255, 0),Vector2(1.0f,1.0f))
-	//};
-	//int index[6] = {
-	//	0, 1, 2, 0, 1, 3
-	//};
-	//Mesh m(v,4);
-	//m.SetIndex(index,6);
-	//Draw2DMesh(m);
-
-	//1. Mesh
+	// Draw
+	DrawCall(&g_Quad);
 
 	// Buffer Swap 
 	BufferSwap();
+}
+
+void DrawCall(Mesh * MeshToDraw)
+{
+	if (MeshToDraw->IsInitialized())
+	{
+		VertInOut* vOut = new VertInOut[MeshToDraw->VSize];
+		// Vertex Shader
+		for (int i = 0; i < MeshToDraw->VSize; i++)
+		{
+			Vertex vt = MeshToDraw->Vertices[i];
+			VertInOut vIn(vt.position, vt.uv, vt.color);
+			vOut[i] = VertexShader(vIn);
+		}
+
+		// Rasterization
+		for (int i = 0; i < MeshToDraw->ISize; i += 3)
+		{
+			int index1 = MeshToDraw->Indices[i];
+			int index2 = MeshToDraw->Indices[i + 1];
+			int index3 = MeshToDraw->Indices[i + 2];
+
+			Triangle t(vOut[index1], vOut[index2], vOut[index3]);
+			for (int y = t.Min.Y; y <= t.Max.Y; y++)
+			{
+				for (int x = t.Min.X; x <= t.Max.X; x++)
+				{
+					IntPoint target(x, y);
+					float outS, outT;
+					t.CalcBaryCentricCoord(target, &outS, &outT);
+					if (t.IsInTrianble(outS, outT))
+					{
+						// Fragment Shader
+						FragIn frag = t.GetFragment(outS, outT);
+						g_CurrentColor = FragmentShader(frag);
+						PutPixel(target);
+					}
+				}
+			}
+		}
+	}
+}
+
+VertInOut VertexShader(VertInOut v)
+{
+	VertInOut result;
+	result.color = v.color;
+	result.uv = v.uv;
+	result.position = v.position * g_ShaderMatrix;
+	return result;
+}
+
+ULONG FragmentShader(FragIn f)
+{
+	ULONG finalColor;
+	if (g_Texture->IsLoaded())
+	{
+		finalColor = g_Texture->GetTexturePixel(f.uv);
+	}
+	else
+	{
+		finalColor = f.color;
+	}
+
+	return finalColor;
 }
